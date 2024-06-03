@@ -26,8 +26,13 @@ namespace Client
                 do
                 {
                    // Console.Clear();
-                    Console.WriteLine("Введите сообщение");
+                    Console.WriteLine("Введите сообщение (для выхода введите \"Exit\"): ");
                     messageText = Console.ReadLine();
+                    if (messageText.ToLower() == "exit")
+                    {
+                        Console.WriteLine("Завершение работы клиента.");
+                        break;
+                    }
                 }
                 while (string.IsNullOrEmpty(messageText));
                 Message message = new Message() { Text = messageText, NicknameFrom = From, NicknameTo = "Server", DateTime = DateTime.Now };

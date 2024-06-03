@@ -25,10 +25,10 @@ namespace Server
         { 
             UdpClient udpClient = new UdpClient(12345);
             IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Any, 0);
-            Console.WriteLine("Сервер ждет сообщение от клиента");
+            Console.WriteLine("Сервер ждет сообщение от клиента.Нажмите любую клавишу для выхода.");
             
-            while (true)
-            {
+            while (!Console.KeyAvailable) // Ждем нажатия любой клавиши
+                {
                 byte[] buffer = udpClient.Receive(ref iPEndPoint);
 
                 if (buffer == null) break;
@@ -43,7 +43,10 @@ namespace Server
                 udpClient.Send(confirmationBuffer, confirmationBuffer.Length, iPEndPoint);
                 Console.WriteLine(confirmationMessage);
             }
-                
+
+            Console.WriteLine("Сервер завершил работу.");
+            udpClient.Close();
+
         }
     }
 }
