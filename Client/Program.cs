@@ -31,7 +31,9 @@ namespace Client
                     if (messageText.ToLower() == "exit")
                     {
                         Console.WriteLine("Завершение работы клиента.");
-                        break;
+                        
+                        udpClient.Close();
+                        return;
                     }
                 }
                 while (string.IsNullOrEmpty(messageText));
