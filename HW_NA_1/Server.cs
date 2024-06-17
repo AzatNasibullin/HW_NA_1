@@ -7,8 +7,32 @@ using System.Threading.Tasks;
 
 namespace Server
 {
+    // тут храним состояние сервера
+    class ServerMemento
+    {
+        public ServerMemento(string message, CancellationTokenSource cancellationToken)
+        {
+            Message = message;
+            CancellationToken = cancellationToken;
+        }
+
+        public string Message { get; private set; }
+        public CancellationTokenSource CancellationToken { get; private set; }
+    }
+
+    // класс, который будет сохранять и восстанавливать состояние сервера
+    class ServerCaretaker
+    {
+        public ServerMemento Memento { get; set; }
+    }
+
     class NetServer
     {
+
+        public ServerCaretaker caretaker = new ServerCaretaker();
+        public string msg = string.Empty;
+        public CancellationTokenSource cts = new CancellationTokenSource();
+
         public static async Task Server(string message, CancellationTokenSource cancellationToken)
         {
             UdpClient udpClient = new UdpClient(12345);
@@ -38,6 +62,22 @@ namespace Server
             }
 
             udpClient.Close();
+        }
+        // Сохранение состояния сервера
+        public void SaveState(CancellationToken cancellationToken)
+        {
+            {
+                caretaker.Memento = new ServerMemento("Состояние сервера сохранено", cts);
+            }
+        }
+        public void RestoreState()
+        {
+            if (caretaker.Memento != null)
+            {
+                this.msg = caretaker.Memento.Message;
+                this.cts = caretaker.Memento.CancellationToken; // Исправлено на cancellationToken
+                Console.WriteLine("Состояние сервера восстановлено: " + this.msg);
+            }
         }
     }
 }
